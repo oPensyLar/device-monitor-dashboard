@@ -53,19 +53,30 @@
     <table class="table-fill">
         <thead>
             <tr>
-                <th width="65%" class="text-left">Device</th>
+                <th width="10%" class="text-left">DNS</th>
                 <th width="35%" class="text-center">Status</th>
+                <th width="10%" class="text-left">IP</th>
+                <th width="10%" class="text-center">OS</th>
             </tr>
         </thead>
         <tbody class="table-hover">
 					{% for h in host_dict %}
             <tr>
-							<td onClick="window.open('http://{{ h.get("hostname") }}{% if h.get("port") %}:{{ h.get("port") }}{% endif %}')";class="text-left">{{ h.get("name") }}{% if h.get("port") %}:{{ h.get("port") }}{% endif %}</td>
-							{% if h.get("status") == "up" %}
+							<td onClick="window.open('http://{{ h.get("os") }}{% if h.get("port") %}:{{ h.get("port") }}{% endif %}')";class="text-left">{{ h.get("dns_name") }}{% if h.get("port") %}:{{ h.get("port") }}{% endif %}</td>
+							
+
+                            {% if h.get("status") == "up" %}
 							<td><div class="led-green"></div></td>
-							{% elif h.get("status") == "down" %}
+							
+                            {% elif h.get("status") == "down" %}
 							<td><div class="led-red"></div></td>
-							{% endif %}
+							
+                            
+                            {% endif %}
+
+                            <td class="text-left">{{ h.get("ip_addr") }}</td>
+                            <td class="text-left">{{ h.get("os") }}</td>
+
 						</tr>
 					{% endfor %}
 			  </tbody>
