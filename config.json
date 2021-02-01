@@ -1,0 +1,28 @@
+{
+
+"auth" : {
+
+	"password" : "MIOnui23GBuyg"
+},
+
+"report" : {
+
+	"file_name" : "index.html"
+},
+
+"mail" : {
+
+	"smtp" : {
+
+    	"user" : "open.ml@hotmail.com",
+    	"password" : "FVYWtQ5PhckpADenPPf6",
+    	"server" : "smtp.office365.com",
+    	"port" : 587
+
+	},
+
+    "to" : "victormiguelgomez@hotmail.com",
+    "subject" : "SOC Healt report"
+
+    }
+}

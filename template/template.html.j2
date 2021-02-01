@@ -30,6 +30,11 @@
     <script type="text/javascript" src="js/circleColor.js"></script>
     <script type="text/javascript" src="js/circleSize.js"></script>
     <script type="text/javascript" src="js/notifications.js"></script>
+
+    <div class="table-title">
+        <h3>SOC Health-Check Report</h3>
+    </div>
+
     <script>
         new Noty({
             text: "Report created " + "{{ now }}",
@@ -54,15 +59,18 @@
         <thead>
             <tr>
                 <th width="10%" class="text-left">DNS</th>
-                <th width="35%" class="text-center">Status</th>
+                <th width="35%" class="text-center">Ping</th>
+                <th width="35%" class="text-center">Agent</th>
                 <th width="10%" class="text-left">IP</th>
-                <th width="10%" class="text-center">OS</th>
+                <th width="10%" class="text-center">SOC Websites</th>
+                <th width="10%" class="text-center">Status</th>
+                <th width="10%" class="text-center">Code</th>
             </tr>
         </thead>
         <tbody class="table-hover">
 					{% for h in host_dict %}
             <tr>
-							<td onClick="window.open('http://{{ h.get("os") }}{% if h.get("port") %}:{{ h.get("port") }}{% endif %}')";class="text-left">{{ h.get("dns_name") }}{% if h.get("port") %}:{{ h.get("port") }}{% endif %}</td>
+							<td onClick="window.open('{{h.get("html_path")}}')";class="text-left">{{ h.get("dns_name") }}{% if h.get("port") %}:{{ h.get("port") }}{% endif %}</td>
 							
 
                             {% if h.get("status") == "up" %}
@@ -74,12 +82,24 @@
                             
                             {% endif %}
 
+                            {% if h.get("status_agent") == "1" %}
+                            <td><div class="led-green"></div></td>
+                            
+                            {% elif h.get("status_agent") == "0" %}
+                            <td><div class="led-red"></div></td>
+                            
+                            
+                            {% endif %}
+
                             <td class="text-left">{{ h.get("ip_addr") }}</td>
                             <td class="text-left">{{ h.get("os") }}</td>
 
-						</tr>
-					{% endfor %}
-			  </tbody>
+                            <td><div class="led-red"></div></td>
+                            <td class="text-center">{{ h.get("status_web") }}</td>
+
+                        </tr>
+                    {% endfor %}
+              </tbody>
     </table>
 </body>
 

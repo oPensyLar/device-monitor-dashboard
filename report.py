@@ -3,15 +3,58 @@
 import datetime
 import json
 import subprocess
-import dns.resolver
 from ipaddress import ip_address, ip_network
 from jinja2 import Environment, FileSystemLoader
+import dns.resolver
+import socket_client
+import parser_j
+import html_report
+import compress
+import config
+import mailer
+import os
+import requests
 
-env = Environment(
-    loader=FileSystemLoader('template')
-)
 
+env = Environment(loader=FileSystemLoader('template'))
 template = env.get_template('template.html.j2')
+
+def load_config(file_path):
+    with open(file_path, "r") as f:
+        cfg = json.load(f)
+        return cfg
+
+
+def build_zip(c_path, file_path_output):
+    c = compress.Compress()
+    css_folder = c_path + "\\css"
+    js_folder = c_path + "\\js"
+    report_folder = c_path + "\\report-details"
+    arrays_files = [report_folder, css_folder, js_folder, "index.html"]
+    c.build(c_path, arrays_files, file_path_output)
+
+
+def send_mail(mail_data, user_data, server_data):
+    m = mailer.Mailer()
+
+    m.set_login(user_data.get("sender"), user_data.get("pass"))
+    m.set_srv(server_data.get("serv"), server_data.get("port"))
+    m.set_body(mail_data.get("to"),
+               mail_data.get("subject"),
+               mail_data.get("attach"),
+               mail_data.get("body"))
+
+    m.conn()
+
+
+def check_web(hst):
+    try:
+        resp = requests.get("http://" + hst)
+
+    except requests.exceptions.ConnectionError:
+        return None
+
+    return resp.status_code
 
 
 def is_ip_range(c_addr):
@@ -27,7 +70,10 @@ def dns_resolver(ip_addr):
         answer = my_resolver.resolve_address(ip_addr)
 
     except dns.exception.Timeout:
-        return nam
+        return None
+
+    except dns.resolver.NXDOMAIN:
+        return None
 
     for g in answer.response.answer:
         for a in g.items:
@@ -71,6 +117,7 @@ def parsehost(hostfile):
     servers = []
     with open(hostfile, "r") as f:
         data = json.load(f)
+
         for item in data:
                 if item["alias"]:
                     servers.append({"hostname": item["url"], "name": item["alias"]})
@@ -87,6 +134,7 @@ def createhtml(output_file_name, host_dict):
     servers_up = 0.00
     servers_down = 0.00
     servers_percent = 0.00
+
     for h in host_dict:
         if h.get("status") == "up":
             servers_up += 1
@@ -103,11 +151,22 @@ def createhtml(output_file_name, host_dict):
                     server_total=server_total,
                     host_dict=host_dict).dump('index.html')
 
-# Modifica las variables del dict
+
 def main():
     f_nam = "srv.txt"
     output_file_name = "index.html"
     hosts = []
+
+    config = load_config("config.json")
+
+    user = config.get("mail").get("smtp").get("user")
+    pasword = config.get("mail").get("smtp").get("password")
+
+    serv = config.get("mail").get("smtp").get("server")
+    port = config.get("mail").get("smtp").get("port")
+
+    para = config.get("mail").get("to")
+    subject = config.get("mail").get("subject")
 
     with open(f_nam, "r") as f:
         for c_addr in f:
@@ -134,18 +193,57 @@ def main():
         h.update(ip_addr=h.get("hostname"))
 
         if ping_vals["ttl"] is not 0x0:
+            html_path = "report-details/details-" + h.get("hostname") + ".html"
             h.update(status="up")       # Vive
             dns_nam = dns_resolver(h.get("hostname"))
             os_nam = os_detect(ping_vals["ttl"])
+            status_web = check_web(h.get("hostname"))
+            h.update(status_web=status_web)
             h.update(dns_name=dns_nam)
             h.update(os=os_nam)
+            h.update(html_path=html_path)
+
+            s = socket_client.SocketClient()
+            html_rpt = html_report.HtmlReport()
+            html_rpt.set_path("report-details")
+
+            ret_code = s.connect(h.get("hostname"), 7777)
+
+            if ret_code == 0x0:
+                p = parser_j.json_parser()
+                p.set_mem_report(0x1)
+                p.set_disk_report(0x1)
+                p.set_procs_report(0x1)
+                p.set_cpu_report(0x1)
+                p.set_pass_auth(config.get("auth").get("password"))
+
+                json_data = p.get_request()
+                s.send_payload(json_data)
+                resp = s.recv_response()
+                s.close()
+                h.update(status_agent="1")
+                html_rpt.build(h.get("hostname"), resp, html_path)
+
+            if ret_code is 0x1:
+                h.update(status_agent="0")
+                print("[!] ConnectionRefusedError")
 
         else:
+            h.update(status_web=None)
+            h.update(status_agent="0")
             h.update(status="down")     # Dead
             h.update(dns_name="None")
             h.update(os="Unknow")
 
     createhtml(output_file_name, hosts)
+    c_path = os.getcwd()
+    file_output = c_path + "\\reports.zip"
+    build_zip(c_path, file_output)
+
+    u = {"sender": user, "pass": pasword}
+    s = {"serv": serv, "port": port}
+    m = {"to": para, "subject": subject, "attach": file_output, "body": "Report"}
+    send_mail(m, u, s)
 
 
 if __name__ == "__main__":

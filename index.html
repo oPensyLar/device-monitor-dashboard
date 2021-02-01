@@ -16,7 +16,7 @@
     <div id="circle"><strong></strong></div>
     <script>
         $('#circle').circleProgress({
-            value: "0.5",
+            value: "0.33",
             size: 350,
             thickness: 6,
             emptyFill: "#262b33",
@@ -30,9 +30,14 @@
     <script type="text/javascript" src="js/circleColor.js"></script>
     <script type="text/javascript" src="js/circleSize.js"></script>
     <script type="text/javascript" src="js/notifications.js"></script>
+
+    <div class="table-title">
+        <h3>SOC Health-Check Report</h3>
+    </div>
+
     <script>
         new Noty({
-            text: "Report created " + "01/22/2021 17:20:14",
+            text: "Report created " + "01/31/2021 11:20:08",
             type: 'notification',
             theme: 'mint',
             closeWith: ['click'],
@@ -54,29 +59,113 @@
         <thead>
             <tr>
                 <th width="10%" class="text-left">DNS</th>
-                <th width="35%" class="text-center">Status</th>
+                <th width="35%" class="text-center">Ping</th>
+                <th width="35%" class="text-center">Agent</th>
                 <th width="10%" class="text-left">IP</th>
-                <th width="10%" class="text-center">OS</th>
+                <th width="10%" class="text-center">SOC Websites</th>
+                <th width="10%" class="text-center">Status</th>
+                <th width="10%" class="text-center">Code</th>
             </tr>
         </thead>
         <tbody class="table-hover">
 					
             <tr>
-							<td onClick="window.open('http://Linux')";class="text-left">None</td>
+							<td onClick="window.open('None')";class="text-left">None</td>
+							
+
+                            
+							<td><div class="led-red"></div></td>
+							
+                            
+                            
+
+                            
+                            <td><div class="led-red"></div></td>
+                            
+                            
+                            
+
+                            <td class="text-left">192.168.1.100</td>
+                            <td class="text-left">Unknow</td>
+
+                            <td><div class="led-red"></div></td>
+                            <td class="text-center">None</td>
+
+                        </tr>
+                    
+            <tr>
+							<td onClick="window.open('None')";class="text-left">None</td>
+							
+
+                            
+							<td><div class="led-red"></div></td>
+							
+                            
+                            
+
+                            
+                            <td><div class="led-red"></div></td>
+                            
+                            
+                            
+
+                            <td class="text-left">192.168.1.200</td>
+                            <td class="text-left">Unknow</td>
+
+                            <td><div class="led-red"></div></td>
+                            <td class="text-center">None</td>
+
+                        </tr>
+                    
+            <tr>
+							<td onClick="window.open('None')";class="text-left">None</td>
+							
+
+                            
+							<td><div class="led-red"></div></td>
+							
+                            
+                            
+
+                            
+                            <td><div class="led-red"></div></td>
+                            
+                            
+                            
+
+                            <td class="text-left">192.168.1.1</td>
+                            <td class="text-left">Unknow</td>
+
+                            <td><div class="led-red"></div></td>
+                            <td class="text-center">None</td>
+
+                        </tr>
+                    
+            <tr>
+							<td onClick="window.open('report-details/details-192.168.1.3.html')";class="text-left">None</td>
 							
 
                             
 							<td><div class="led-green"></div></td>
 							
+                            
+
+                            
+                            <td><div class="led-red"></div></td>
+                            
+                            
                             
 
                             <td class="text-left">192.168.1.3</td>
                             <td class="text-left">Linux</td>
 
-						</tr>
-					
+                            <td><div class="led-red"></div></td>
+                            <td class="text-center">200</td>
+
+                        </tr>
+                    
             <tr>
-							<td onClick="window.open('http://Unknow')";class="text-left">None</td>
+							<td onClick="window.open('None')";class="text-left">None</td>
 							
 
                             
@@ -85,13 +174,22 @@
                             
                             
 
-                            <td class="text-left">192.168.1.119</td>
+                            
+                            <td><div class="led-red"></div></td>
+                            
+                            
+                            
+
+                            <td class="text-left">192.168.1.4</td>
                             <td class="text-left">Unknow</td>
 
-						</tr>
-					
+                            <td><div class="led-red"></div></td>
+                            <td class="text-center">None</td>
+
+                        </tr>
+                    
             <tr>
-							<td onClick="window.open('http://Windows')";class="text-left">None</td>
+							<td onClick="window.open('report-details/details-127.0.0.1.html')";class="text-left">None</td>
 							
 
                             
@@ -99,27 +197,20 @@
 							
                             
 
-                            <td class="text-left">192.168.1.192</td>
+                            
+                            <td><div class="led-green"></div></td>
+                            
+                            
+
+                            <td class="text-left">127.0.0.1</td>
                             <td class="text-left">Windows</td>
 
-						</tr>
-					
-            <tr>
-							<td onClick="window.open('http://Unknow')";class="text-left">None</td>
-							
+                            <td><div class="led-red"></div></td>
+                            <td class="text-center">200</td>
 
-                            
-							<td><div class="led-red"></div></td>
-							
-                            
-                            
-
-                            <td class="text-left">192.168.1.218</td>
-                            <td class="text-left">Unknow</td>
-
-						</tr>
-					
-			  </tbody>
+                        </tr>
+                    
+              </tbody>
     </table>
 </body>
 
