@@ -14,14 +14,14 @@
 
 	"smtp" : {
 
-    	"user" : "open.ml@hotmail.com",
-    	"password" : "FVYWtQ5PhckpADenPPf6",
+    	"user" : "you_mail_sender@you_domain.com",
+    	"password" : "you_password",
     	"server" : "smtp.office365.com",
     	"port" : 587
 
 	},
 
-    "to" : "victormiguelgomez@hotmail.com",
+    "to" : "you_mail_recv@hotmail.com",
     "subject" : "SOC Healt report"
 
     }
