@@ -14,6 +14,7 @@ import config
 import mailer
 import os
 import requests
+import wmi_class
 
 
 env = Environment(loader=FileSystemLoader('template'))
@@ -153,6 +154,9 @@ def createhtml(output_file_name, host_dict):
 
 
 def main():
+
+    c_wmi = wmi_class.WmiClass()
+
     f_nam = "srv.txt"
     output_file_name = "index.html"
     hosts = []
@@ -206,6 +210,13 @@ def main():
             s = socket_client.SocketClient()
             html_rpt = html_report.HtmlReport()
             html_rpt.set_path("report-details")
+
+            if os_nam == "Windows":
+                c_wmi.set_mem_report(0x1)
+                c_wmi.set_disk_report(0x1)
+                c_wmi.set_procs_report(0x1)
+                c_wmi.set_cpu_report(0x1)
+                c_wmi.send_query(h.get("hostname"))
 
             ret_code = s.connect(h.get("hostname"), 7777)
 
