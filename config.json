@@ -1,5 +1,11 @@
 {
 
+"wmi" : {
+	"user" : "opensylar10-vm-x86",
+	"password" : "pxgtsjmnt"
+},
+
+
 "auth" : {
 
 	"password" : "MIOnui23GBuyg"

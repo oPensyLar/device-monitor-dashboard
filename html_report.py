@@ -13,48 +13,59 @@ class HtmlReport:
     def __init__(self):
         pass
 
-    def build(self, hst, dats, file_path):
-        j_str = dats.decode("utf-8")
-        resp_json = json.loads(dats)
-        disk_info = []
+    def build(self, hst, wmi_object, file_path):
+
         procs_info = []
-        mem_info = []
-        cpu_usg = None
+        cpu_usg = []
+        disk_info = []
 
-        if resp_json["auth"].get("state"):
-            for dsk in resp_json["disk"]:
-                f = "{:.2f}".format(dsk["free"] / 1024)
-                t = "{:.2f}".format(dsk["total"] / 1024)
-                disk_info.append({"path": dsk["path"], "freespace": f, "totalspace": t})
+        print("[+] Found " + str(len(wmi_object.get_cpu())) + " process")
 
-            for m in resp_json["mem"]:
-                var1 = "{:.2f}".format(m.get("total_phys") / 1073741824)
-                m.update(total_phys=var1)
+        for cpu in wmi_object.get_cpu():
 
-                var1 = "{:.2f}".format(m.get("avail_phys") / 1073741824)
-                m.update(avail_phys=var1)
+            if cpu.Name == "_Total" or cpu.Name == "System" or cpu.Name == "Idle" or int(cpu.PercentProcessorTime) == 0x0:
+                continue
 
-                var1 = "{:.2f}".format(m.get("total_virtual") / 1073741824)
-                m.update(total_virtual=var1)
+            procs_info.append({"name": cpu.Name,
+                           "pid": cpu.CreatingProcessID,
+                           "mem": str(int(int(cpu.WorkingSet) / 1024/1024)) + " MB",
+                           "cpu": cpu.PercentProcessorTime + " %"})
 
-                var1 = "{:.2f}".format(m.get("avail_virtual") / 1073741824)
-                m.update(avail_virtual=var1)
-                mem_info = m
+        procs_info = sorted(procs_info, key=lambda i: (i['cpu']))
+        procs_info = procs_info[len(procs_info)-3:]
 
-            for c in resp_json["cpu"]:
-                cpu_usg = c.get("usage")
+        for dsk in wmi_object.get_har_disks():
 
-            for c_proc in resp_json["procs"]:
-                var1 = int(c_proc["mem_usage"] / 1024)
+            if dsk.FreeSpace is not None:
+                f = int(dsk.FreeSpace) / 1000000000
+                f = '{0:.2g}'.format(f) + " GB"
 
-                procs_info.append({"name": c_proc["nam"],
-                                   "pid": c_proc["pid"],
-                                   "mem": var1,
-                                   "cpu": c_proc["cpu_usage"],
-                                   })
+            else:
+                f = dsk.FreeSpace
 
-            self.template.stream(ip_addr=hst,
-                                 procs_dict=procs_info,
-                                 cpu_usage=cpu_usg,
-                                 mem_dict=mem_info,
-                                 disk_inf=disk_info).dump(file_path)
+            if dsk.Size is not None:
+                t = int(dsk.Size) / 1000000000
+                t = '{0:.2g}'.format(t)  + " GB"
+
+            else:
+                t = dsk.Size
+
+            disk_info.append({"path": dsk.Caption,
+                              "freespace": f,
+                              "totalspace": t})
+
+        t = wmi_object.get_memory()
+
+        mem_info = {"avail_virtual": 0x0,
+                    "total_virtual": 0x0,
+                    "avail_phys": t["f"] + " GB",
+                    "total_phys": t["t"]+ " GB"}
+
+        self.template.stream(ip_addr=hst,
+                             procs_dict=procs_info,
+                             cpu_usage=cpu_usg,
+                             mem_dict=mem_info,
+                             disk_inf=disk_info).dump(file_path)
+
+        return 0x0
+

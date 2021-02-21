@@ -11,6 +11,7 @@ import parser_j
 import html_report
 import compress
 import config
+import ssh_client
 import mailer
 import os
 import requests
@@ -83,6 +84,8 @@ def dns_resolver(ip_addr):
 
 
 def os_detect(ttl_val):
+    return "Windows"
+
     if ttl_val is 64:
         return "Linux"
 
@@ -156,12 +159,16 @@ def createhtml(output_file_name, host_dict):
 def main():
 
     c_wmi = wmi_class.WmiClass()
+    ssh = ssh_client.SshClient()
 
     f_nam = "srv.txt"
     output_file_name = "index.html"
     hosts = []
 
     config = load_config("config.json")
+
+    wmi_user = config.get("wmi").get("user")
+    wmi_pwd = config.get("wmi").get("password")
 
     user = config.get("mail").get("smtp").get("user")
     pasword = config.get("mail").get("smtp").get("password")
@@ -201,6 +208,7 @@ def main():
             h.update(status="up")       # Vive
             dns_nam = dns_resolver(h.get("hostname"))
             os_nam = os_detect(ping_vals["ttl"])
+            print("TTL:: " + str(ping_vals["ttl"]))
             status_web = check_web(h.get("hostname"))
             h.update(status_web=status_web)
             h.update(dns_name=dns_nam)
@@ -211,35 +219,24 @@ def main():
             html_rpt = html_report.HtmlReport()
             html_rpt.set_path("report-details")
 
-            if os_nam == "Windows":
-                c_wmi.set_mem_report(0x1)
-                c_wmi.set_disk_report(0x1)
-                c_wmi.set_procs_report(0x1)
-                c_wmi.set_cpu_report(0x1)
-                c_wmi.send_query(h.get("hostname"))
+            # if os_nam == "Windows":
 
-            ret_code = s.connect(h.get("hostname"), 7777)
+            print("[+] Sending WMI query..")
+            query = c_wmi.send_query(h.get("hostname"), wmi_user, wmi_pwd, 0x1)
+            c_wmi.send_query(h.get("hostname"), wmi_user, wmi_pwd, 0x2)
+            c_wmi.send_query(h.get("hostname"), wmi_user, wmi_pwd, 0x3)
+            h.update(status_agent="1")
+            html_rpt.build(h.get("hostname"), c_wmi, html_path)
 
-            if ret_code == 0x0:
-                p = parser_j.json_parser()
-                p.set_mem_report(0x1)
-                p.set_disk_report(0x1)
-                p.set_procs_report(0x1)
-                p.set_cpu_report(0x1)
-                p.set_pass_auth(config.get("auth").get("password"))
+            #else:
+                #pass
+                # ssh.send_query(h.get("hostname"), ssh_user, ssh_pwd, 0x1)
+                # ssh.send_query(h.get("hostname"), ssh_user, ssh_pwd, 0x2)
+                # ssh.send_query(h.get("hostname"), ssh_user, ssh_pwd, 0x3)
 
-                json_data = p.get_request()
-                s.send_payload(json_data)
-                resp = s.recv_response()
-                s.close()
-                h.update(status_agent="1")
-                html_rpt.build(h.get("hostname"), resp, html_path)
-
-            if ret_code is 0x1:
-                h.update(status_agent="0")
-                print("[!] ConnectionRefusedError")
-
+        # Offline
         else:
+            print("[!] " + h.get("hostname") + " offline")
             h.update(status_web=None)
             h.update(status_agent="0")
             h.update(status="down")     # Dead
@@ -247,14 +244,17 @@ def main():
             h.update(os="Unknow")
 
     createhtml(output_file_name, hosts)
+
     c_path = os.getcwd()
     file_output = c_path + "\\reports.zip"
     build_zip(c_path, file_output)
 
-    u = {"sender": user, "pass": pasword}
-    s = {"serv": serv, "port": port}
-    m = {"to": para, "subject": subject, "attach": file_output, "body": "Report"}
-    send_mail(m, u, s)
+    print("[+] Finish!")
+
+    # u = {"sender": user, "pass": pasword}
+    # s = {"serv": serv, "port": port}
+    # m = {"to": para, "subject": subject, "attach": file_output, "body": "Report"}
+    # send_mail(m, u, s)
 
 
 if __name__ == "__main__":
