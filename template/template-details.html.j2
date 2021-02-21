@@ -1,0 +1,131 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="js/noty/lib/noty.css">
+    <script type="text/javascript" src="js/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="js/circle-progress/circle-progress.min.js"></script>
+    <script type="text/javascript" src="js/noty/lib/noty.min.js"></script>
+    <title>{{ip_addr}} Monitor</title>
+</head>
+
+<body>
+    <script type="text/javascript" src="js/circleColor.js"></script>
+    <script type="text/javascript" src="js/circleSize.js"></script>
+    <script type="text/javascript" src="js/notifications.js"></script>
+    <script>
+        new Noty({
+            text: "Report created " + "01/22/2021 17:20:14",
+            type: 'notification',
+            theme: 'mint',
+            closeWith: ['click'],
+            progressBar: true,
+            timeout: 10000,
+            animation: {
+                open: 'animated bounceInRight',
+                close: 'animated bounceOutRight',
+                easing: 'swing',
+            }
+        }).show();
+    </script>
+
+    <div class="table-title">
+        <h3>Disk (GB)</h3>
+    </div>
+
+
+    <table class="table-fill">
+        <thead>
+            <tr>
+                <th width="10%" class="text-left">Disk Root</th>
+                <th width="10%" class="text-left">Total</th>
+                <th width="35%" class="text-center">Free</th>                        
+            </tr>
+        </thead>
+        <tbody class="table-hover">
+
+                {% for h in disk_inf %}
+
+                    <tr>
+                        <td class="text-left">{{h.path}}</td>
+                        <td class="text-center">{{h.totalspace}}</td>
+                        <td class="text-center">{{h.freespace}}</td>
+                    </tr>                    
+
+                {% endfor %}            
+                                                            
+        </tbody>
+    </table>
+
+    <br />
+    <br />
+    <br />    
+
+    <div class="table-title">
+        <h3>Top Process CPU Usage</h3>
+    </div>
+
+    <table class="table-fill">
+        <thead>
+            <tr>
+                <th width="10%" class="text-left">Process name</th>
+                <th width="10%" class="text-left">CPU</th>
+                <th width="35%" class="text-center">MEM</th>                        
+            </tr>
+        </thead>
+        <tbody class="table-hover">
+
+            {% for p in procs_dict %}
+
+                <tr>
+                    <td class="text-left">{{p.name}}</td>
+                    <td class="text-center">{{p.cpu}}</td>
+                    <td class="text-center">{{p.mem}}</td>
+                </tr>
+
+
+            {% endfor %}                                    
+                    
+              </tbody>
+    </table>
+
+
+    <br />
+    <br />
+    <br />    
+
+    <div class="table-title">
+        <h3>Memory (GB)</h3>
+    </div>
+
+    <table class="table-fill">
+        <thead>
+            <tr>
+                <th width="10%" class="text-left">Type</th>
+                <th width="10%" class="text-left">Total</th>
+                <th width="35%" class="text-center">Free</th>                        
+            </tr>
+        </thead>
+        <tbody class="table-hover">
+                    
+            <tr>
+                            <td class="text-left">SWAP</td>
+                            <td class="text-center">{{mem_dict.total_virtual}}</td>
+                            <td class="text-center">{{mem_dict.avail_virtual}}</td>
+            </tr>
+                    
+            <tr>
+                            <td class="text-left">Physical</td>
+                            <td class="text-center">{{mem_dict.total_phys}}</td>
+                            <td class="text-center">{{mem_dict.avail_phys}}</td>
+            </tr>                    
+                    
+              </tbody>
+    </table>
+
+
+</body>
+
+</html>

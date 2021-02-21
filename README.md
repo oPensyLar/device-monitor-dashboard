@@ -4,13 +4,14 @@ Python script to generate html report of devices' online/offline status. A cheap
 This can be used for for servers, networking equipment, IOT devices, anything that's "pingable".
 Supports:
 
- * Agent support (via socket - Windows) 
+ * Mail notifications
+ * Agent report (via socket - Windows) 
  * HTTP return code (404, 200, 302)
- * IP ranges scan
- * DNS name resolver
+ * IP ranges scan (192.168.0.0/24)
+ * DNS name resolver (google.com -> 8.8.8.8)
  * Hard disk report (via WMI queries)
  * Top process CPU usage (via WMI queries)
- * Memory RAM usafe (via WMI queries)
+ * Memory RAM usage (via WMI queries)
 
 
 
