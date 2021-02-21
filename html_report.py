@@ -37,15 +37,13 @@ class HtmlReport:
         for dsk in wmi_object.get_har_disks():
 
             if dsk.FreeSpace is not None:
-                f = int(dsk.FreeSpace) / 1000000000
-                f = '{0:.2g}'.format(f) + " GB"
+                f = str(int(int(dsk.FreeSpace) / 1000000000)) + " GB"
 
             else:
                 f = dsk.FreeSpace
 
             if dsk.Size is not None:
-                t = int(dsk.Size) / 1000000000
-                t = '{0:.2g}'.format(t)  + " GB"
+                t = str(int(int(dsk.Size) / 1000000000)) + " GB"
 
             else:
                 t = dsk.Size
