@@ -39,7 +39,7 @@ def build_zip(c_path, file_path_output):
 def send_mail(mail_data, user_data, server_data):
     m = mailer.Mailer()
 
-    m.set_login(user_data.get("sender"), user_data.get("pass"))
+    m.set_login(user_data.get("sender"))
     m.set_srv(server_data.get("serv"), server_data.get("port"))
     m.set_body(mail_data.get("to"),
                mail_data.get("subject"),
@@ -251,10 +251,10 @@ def main():
 
     print("[+] Finish!")
 
-    # u = {"sender": user, "pass": pasword}
-    # s = {"serv": serv, "port": port}
-    # m = {"to": para, "subject": subject, "attach": file_output, "body": "Report"}
-    # send_mail(m, u, s)
+    u = {"sender": user}
+    s = {"serv": serv, "port": port}
+    m = {"to": para, "subject": subject, "attach": file_output, "body": "Report"}
+    send_mail(m, u, s)
 
 
 if __name__ == "__main__":

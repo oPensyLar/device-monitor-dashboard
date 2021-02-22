@@ -11,7 +11,6 @@ import os
 class Mailer:
     serv_obj = None
     mime_obj = None
-    pwd = None
     usr = None
     msg = None
     srv = None
@@ -43,9 +42,8 @@ class Mailer:
 
         self.mime_obj.attach(MIMEText(body, 'plain'))
 
-    def set_login(self, usr, pwd):
+    def set_login(self, usr):
         self.usr = usr
-        self.pwd = pwd
 
     def conn(self):
         loop_flag = True
@@ -54,9 +52,9 @@ class Mailer:
             try:
                 self.serv_obj = smtplib.SMTP(self.srv, self.prt)
                 self.serv_obj.set_debuglevel(self.verb)
-                self.serv_obj.ehlo()
-                self.serv_obj.starttls()
-                self.serv_obj.login(self.usr, self.pwd)
+                # self.serv_obj.ehlo()
+                # self.serv_obj.starttls()
+                # self.serv_obj.login(self.usr, self.pwd)
                 txt = self.mime_obj.as_string()
                 self.serv_obj.sendmail(self.usr, self.mime_obj['To'], txt)
                 self.serv_obj.quit()

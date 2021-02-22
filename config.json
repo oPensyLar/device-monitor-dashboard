@@ -21,7 +21,6 @@
 	"smtp" : {
 
     	"user" : "you_mail_sender@you_domain.com",
-    	"password" : "you_password",
     	"server" : "smtp.office365.com",
     	"port" : 587
 
