@@ -60,9 +60,6 @@ class Mailer:
                 self.serv_obj.quit()
                 loop_flag = False
 
-            except OSError:
-                print("[!] OSError")
-
             except socket.gaierror:
                 print("[!] socket.gaierror")
 
