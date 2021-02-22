@@ -50,6 +50,7 @@ class Mailer:
 
         while loop_flag:
             try:
+                print("[+] Sending mail to SMTP relay server (" + self.srv + ")")
                 self.serv_obj = smtplib.SMTP(self.srv, self.prt)
                 self.serv_obj.set_debuglevel(self.verb)
                 # self.serv_obj.ehlo()
