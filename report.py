@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import base64
+import re
 import datetime
 import json
 import subprocess
@@ -280,9 +280,6 @@ def main():
 
 
 if __name__ == "__main__":
-
-
-
     print(f"[INFO] {datetime.datetime.now().strftime('%b %d %Y %H:%M:%S')} Checking hosts...")
     main()
     print(f"[INFO] {datetime.datetime.now().strftime('%b %d %Y %H:%M:%S')} Finished checking hosts")

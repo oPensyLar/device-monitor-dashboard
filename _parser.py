@@ -1,3 +1,5 @@
+import re
+
 class Hds:
     Caption = None
     Size = None
@@ -13,11 +15,12 @@ class Procs:
 
 class Parser:
 
+    mem = None
     err_code = None
     procs = []
 
     def get_memory(self):
-        return {"f": "0", "t": "0"}
+        return self.mem
 
     def get_har_disks(self):
         return [Hds()]
@@ -81,7 +84,28 @@ class Parser:
         return 0x0
 
     def parse_mem(self, raw_mem):
-        pass
+        break_lines = raw_mem.split("\n")
+
+        mem_line = break_lines[2]
+        swap_line = break_lines[3]
+
+        iter = re.finditer(r"[{0-9}].[{0-9}][A-Z]", mem_line)
+        indices = [m.start(0) for m in iter]
+
+        total = mem_line[indices[0]:]
+        cut_final = total.find(" ")
+        total = total[:cut_final]
+
+        usage = mem_line[indices[1]:]
+        cut_final = usage.find(" ")
+        usage = usage[:cut_final]
+
+        free = mem_line[indices[2]:]
+        cut_final = free.find(" ")
+        free = free[:cut_final]
+
+        self.mem = {"t": total, "f": free, "u": usage}
+
 
     def set_error(self, error_code):
         self.err_code = error_code
@@ -93,11 +117,10 @@ class Parser:
         ps_cpu = raw_ssh_data[0]
         self.parse_procs(ps_cpu)
 
-        ps_mem = raw_ssh_data[3]
         # self.parse_procs(ps_mem, 0x4)
 
-        free = raw_ssh_data[3]
-        self.parse_mem(free)
+        # free = raw_ssh_data[3]
+        self.parse_mem(raw_ssh_data[10])
 
         netstat = raw_ssh_data[4]
         self.parse_connections(netstat)

@@ -62,10 +62,18 @@ class HtmlReport:
 
         t = wmi_object.get_memory()
 
+        if linux_inf is 0x0:
+            f = t["f"] + " GB"
+            t = t["t"] + " GB"
+
+        else:
+            f = t["f"]
+            t = t["t"]
+
         mem_info = {"avail_virtual": 0x0,
                     "total_virtual": 0x0,
-                    "avail_phys": t["f"] + " GB",
-                    "total_phys": t["t"]+ " GB"}
+                    "avail_phys": f,
+                    "total_phys": t}
 
         self.template.stream(ip_addr=hst,
                              procs_dict=procs_info,
