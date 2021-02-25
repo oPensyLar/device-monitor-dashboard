@@ -1,5 +1,15 @@
 {
 
+"ssh" : {
+
+	"user" : "root",
+	"password" : "pxgtsjmnt",
+	"port" : 22,
+
+	"payload" : "cHMgdWF4IC0tc29ydCAtY3B1OyBlY2hvIC0tQzBSVDQtLTsgcHMgdWF4IC0tc29ydCAtcnNzOyBlY2hvIC0tQzBSVDQtLTsgZnJlZSAtbTsgZWNobyAtLUMwUlQ0LS07IG5ldHN0YXQgLXB1bnRhOyBlY2hvIC0tQzBSVDQtLTsgZGYgLWg="
+
+},
+
 "wmi" : {
 	"user" : "opensylar10-vm-x86",
 	"password" : "pxgtsjmnt"
@@ -21,8 +31,8 @@
 	"smtp" : {
 
     	"user" : "you_mail_sender@you_domain.com",
-    	"server" : "smtp.office365.com",
-    	"port" : 587
+    	"server" : "you-smtp-relay-address",
+    	"port" : 25
 
 	},
 

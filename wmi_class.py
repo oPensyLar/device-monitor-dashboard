@@ -8,6 +8,9 @@ class WmiClass:
     free_mem = []
     cpu_obj = None
 
+    def get_error(self):
+        return 0x0
+
     def get_cpu(self):
         return self.cpu_obj
 

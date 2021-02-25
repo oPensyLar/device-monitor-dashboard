@@ -13,7 +13,10 @@ class HtmlReport:
     def __init__(self):
         pass
 
-    def build(self, hst, wmi_object, file_path):
+    def build(self, hst, wmi_object, file_path, linux_inf):
+
+        if wmi_object.get_error() is not 0x0:
+            return
 
         procs_info = []
         cpu_usg = []
@@ -22,13 +25,18 @@ class HtmlReport:
         print("[+] Found " + str(len(wmi_object.get_cpu())) + " process")
 
         for cpu in wmi_object.get_cpu():
-
             if cpu.Name == "_Total" or cpu.Name == "System" or cpu.Name == "Idle" or int(cpu.PercentProcessorTime) == 0x0:
                 continue
 
+            if linux_inf is True:
+                mem = cpu.WorkingSet + " %"
+
+            else:
+                mem = str(int(int(cpu.WorkingSet) / 1024/1024)) + " MB"
+
             procs_info.append({"name": cpu.Name,
                            "pid": cpu.CreatingProcessID,
-                           "mem": str(int(int(cpu.WorkingSet) / 1024/1024)) + " MB",
+                           "mem": mem,
                            "cpu": cpu.PercentProcessorTime + " %"})
 
         procs_info = sorted(procs_info, key=lambda i: (i['cpu']))

@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import base64
 import datetime
 import json
 import subprocess
@@ -16,7 +17,7 @@ import mailer
 import os
 import requests
 import wmi_class
-
+import util
 
 env = Environment(loader=FileSystemLoader('template'))
 template = env.get_template('template.html.j2')
@@ -84,12 +85,10 @@ def dns_resolver(ip_addr):
 
 
 def os_detect(ttl_val):
-    return "Windows"
-
     if ttl_val is 64:
         return "Linux"
 
-    if ttl_val == 128:
+    if ttl_val == 128 or ttl_val == 124:
         return "Windows"
 
 
@@ -157,9 +156,11 @@ def createhtml(output_file_name, host_dict):
 
 
 def main():
+    mail_notification = False
 
     c_wmi = wmi_class.WmiClass()
     ssh = ssh_client.SshClient()
+    utils = util.Util()
 
     f_nam = "srv.txt"
     output_file_name = "index.html"
@@ -167,8 +168,18 @@ def main():
 
     config = load_config("config.json")
 
+    # WMI user/pass
     wmi_user = config.get("wmi").get("user")
     wmi_pwd = config.get("wmi").get("password")
+
+    ssh_payload = utils.b64_decrypt(config.get("ssh").get("payload"))
+
+    # ssh_user = config.get("wmi").get("user")
+    # ssh_pwd = config.get("wmi").get("password")
+
+    ssh_user = config.get("ssh").get("user")
+    ssh_pwd = config.get("ssh").get("password")
+    ssh_port = config.get("ssh").get("port")
 
     user = config.get("mail").get("smtp").get("user")
     pasword = config.get("mail").get("smtp").get("password")
@@ -196,7 +207,7 @@ def main():
 
     # Setea las variables del dict
     for h in hosts:
-        print("[+] Checking " + h.get("hostname"))
+        print("\r\n[+] Checking " + h.get("hostname"))
 
         std_out, std_error = run_ping2(h.get("hostname"))
         ping_vals = parse_output_ping(std_out)
@@ -208,7 +219,8 @@ def main():
             h.update(status="up")       # Vive
             dns_nam = dns_resolver(h.get("hostname"))
             os_nam = os_detect(ping_vals["ttl"])
-            print("TTL:: " + str(ping_vals["ttl"]))
+            # print("TTL:: " + str(ping_vals["ttl"]))
+
             status_web = check_web(h.get("hostname"))
             h.update(status_web=status_web)
             h.update(dns_name=dns_nam)
@@ -219,20 +231,27 @@ def main():
             html_rpt = html_report.HtmlReport()
             html_rpt.set_path("report-details")
 
-            # if os_nam == "Windows":
+            if os_nam == "Windows":
+                print("[+] Sending WMI query..")
 
-            print("[+] Sending WMI query..")
-            query = c_wmi.send_query(h.get("hostname"), wmi_user, wmi_pwd, 0x1)
-            c_wmi.send_query(h.get("hostname"), wmi_user, wmi_pwd, 0x2)
-            c_wmi.send_query(h.get("hostname"), wmi_user, wmi_pwd, 0x3)
-            h.update(status_agent="1")
-            html_rpt.build(h.get("hostname"), c_wmi, html_path)
+                query = c_wmi.send_query(h.get("hostname"), wmi_user, wmi_pwd, 0x1)
+                c_wmi.send_query(h.get("hostname"), wmi_user, wmi_pwd, 0x2)
+                c_wmi.send_query(h.get("hostname"), wmi_user, wmi_pwd, 0x3)
 
-            #else:
-                #pass
-                # ssh.send_query(h.get("hostname"), ssh_user, ssh_pwd, 0x1)
-                # ssh.send_query(h.get("hostname"), ssh_user, ssh_pwd, 0x2)
-                # ssh.send_query(h.get("hostname"), ssh_user, ssh_pwd, 0x3)
+                h.update(status_agent="1")
+                html_rpt.build(h.get("hostname"), c_wmi, html_path, False)
+
+            else:
+                h.update(status_agent="1")
+                print("[+] Sending SSH payload..")
+
+                c_ssh = ssh.send_query(h.get("hostname"),
+                                       ssh_port,
+                                       ssh_user,
+                                       ssh_pwd,
+                                       ssh_payload)
+
+                html_rpt.build(h.get("hostname"), c_ssh, html_path, True)
 
         # Offline
         else:
@@ -249,15 +268,21 @@ def main():
     file_output = c_path + "\\reports.zip"
     build_zip(c_path, file_output)
 
-    print("[+] Finish!")
+    if mail_notification is True:
+        print("[+] Sending mail to SMTP relay server")
 
-    u = {"sender": user}
-    s = {"serv": serv, "port": port}
-    m = {"to": para, "subject": subject, "attach": file_output, "body": "Report"}
-    send_mail(m, u, s)
+        u = {"sender": user}
+        s = {"serv": serv, "port": port}
+        m = {"to": para, "subject": subject, "attach": file_output, "body": "Report"}
+        send_mail(m, u, s)
+
+    print("[+] Finish!")
 
 
 if __name__ == "__main__":
+
+
+
     print(f"[INFO] {datetime.datetime.now().strftime('%b %d %Y %H:%M:%S')} Checking hosts...")
     main()
     print(f"[INFO] {datetime.datetime.now().strftime('%b %d %Y %H:%M:%S')} Finished checking hosts")
