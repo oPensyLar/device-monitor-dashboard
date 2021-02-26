@@ -26,15 +26,11 @@ class SshClient:
                 continue
 
             except EOFError:
-                print("[!] ERROR")
-                continue
-
-            except paramiko.ssh_exception.SSHException:
-                print("[!] paramiko.ssh_exception.SSHException")
+                print("[!] EOFError")
                 continue
 
             except paramiko.ssh_exception.AuthenticationException:
-                print("[!] ERROR")
+                print("[!] paramiko.ssh_exception.AuthenticationException")
                 continue
 
             except paramiko.ssh_exception.NoValidConnectionsError:

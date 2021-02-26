@@ -18,12 +18,14 @@ class Parser:
     mem = None
     err_code = None
     procs = []
+    hds = []
 
     def get_memory(self):
         return self.mem
 
     def get_har_disks(self):
-        return [Hds()]
+        self.hds = self.hds[-4:]
+        return self.hds
 
     def get_error(self):
         return self.err_code
@@ -32,7 +34,30 @@ class Parser:
         return self.procs
 
     def parse_df(self, raw_df):
-        pass
+        break_lines = raw_df.split("\n")
+
+        break_lines.pop(0)
+        break_lines.pop(0)
+
+        for c_line in break_lines:
+            spaces_lines = c_line.split(" ")
+            index = 0x0
+            one_hd = Hds()
+
+            for one_line in spaces_lines:
+                if len(one_line) > 1:
+                    index += 1
+
+                    if index is 0x1:
+                        one_hd.Caption = one_line
+
+                    if index is 0x2:
+                        one_hd.Size = one_line
+
+                    if index is 0x3:
+                        one_hd.FreeSpace = one_line
+
+            self.hds.append(one_hd)
 
     def parse_connections(self, raw_conns):
         pass
@@ -125,5 +150,5 @@ class Parser:
         netstat = raw_ssh_data[4]
         self.parse_connections(netstat)
 
-        df = raw_ssh_data[6]
+        df = raw_ssh_data[12]
         self.parse_df(df)

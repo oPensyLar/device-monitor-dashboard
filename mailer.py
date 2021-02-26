@@ -15,7 +15,7 @@ class Mailer:
     msg = None
     srv = None
     prt = None
-    verb = True
+    verb = False
 
     def __init__(self):
         pass

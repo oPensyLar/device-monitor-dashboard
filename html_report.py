@@ -43,15 +43,22 @@ class HtmlReport:
         procs_info = procs_info[len(procs_info)-3:]
 
         for dsk in wmi_object.get_har_disks():
-
             if dsk.FreeSpace is not None:
-                f = str(int(int(dsk.FreeSpace) / 1000000000)) + " GB"
+                if linux_inf is 0x0:
+                    f = str(int(int(dsk.FreeSpace) / 1000000000)) + " GB"
+
+                else:
+                    f = dsk.FreeSpace
 
             else:
                 f = dsk.FreeSpace
 
             if dsk.Size is not None:
-                t = str(int(int(dsk.Size) / 1000000000)) + " GB"
+                if linux_inf is 0x0:
+                    t = str(int(int(dsk.Size) / 1000000000)) + " GB"
+
+                else:
+                    t = dsk.Size
 
             else:
                 t = dsk.Size

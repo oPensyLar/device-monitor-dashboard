@@ -1,24 +1,26 @@
 # device-monitor-dashboard
 
-Python script to generate html report of devices' online/offline status. A cheap/fun reporting solution.
+Python script to generate html report of devices. A cheap/fun reporting solution.
 This can be used for for servers, networking equipment, IOT devices, anything that's "pingable".
 Supports:
 
+ * WMI + SSH password encryption
  * OS fingerprint recon (Windows or Linux distro)
  * Mail notifications (SMTP relay)
- * Agent report (via socket - Windows) 
+ * Agent report (via socket - Only Windows support - experimental) 
  * HTTP return code (404, 200, 302)
  * IP ranges scan (192.168.0.0/24)
  * DNS name resolver (google.com -> 8.8.8.8)
  * Hostname (AD) resolver (server-win2k12.domain -> 10.0.1.122)
- * Hard disk usage report (via WMI queries)
- * Top process CPU usage (via WMI queries)
- * Memory RAM usage (via WMI queries)
+ * Hard disk usage report
+ * Top process CPU usage
+ * Memory RAM usage
 
 
 
 ## Changelog
 ---
+ - (2/25/2020) Added SSH + WMI password encryption
  - (2/22/2020) Added SMTP relay
  - (2/21/2020) Added WMI queries
  - (5/16/2020) Update to python 3

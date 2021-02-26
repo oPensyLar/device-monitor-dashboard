@@ -156,7 +156,7 @@ def createhtml(output_file_name, host_dict):
 
 
 def main():
-    mail_notification = False
+    mail_notification = True
 
     c_wmi = wmi_class.WmiClass()
     ssh = ssh_client.SshClient()
@@ -169,17 +169,13 @@ def main():
     config = load_config("config.json")
 
     # WMI user/pass
-    wmi_user = config.get("wmi").get("user")
-    wmi_pwd = config.get("wmi").get("password")
+    wmi_user = utils.b64_decrypt(config.get("wmi").get("user"))
+    wmi_pwd = utils.b64_decrypt(config.get("wmi").get("password"))
 
-    ssh_payload = utils.b64_decrypt(config.get("ssh").get("payload"))
-
-    # ssh_user = config.get("wmi").get("user")
-    # ssh_pwd = config.get("wmi").get("password")
-
-    ssh_user = config.get("ssh").get("user")
-    ssh_pwd = config.get("ssh").get("password")
+    ssh_user = utils.b64_decrypt(config.get("ssh").get("user"))
+    ssh_pwd = utils.b64_decrypt(config.get("ssh").get("password"))
     ssh_port = config.get("ssh").get("port")
+    ssh_payload = utils.b64_decrypt(config.get("ssh").get("payload"))
 
     user = config.get("mail").get("smtp").get("user")
     pasword = config.get("mail").get("smtp").get("password")
