@@ -158,16 +158,6 @@ class Parser:
 
         self.parse_procs(raw_ssh_data[0])
 
-        print("[+] 13:: " + raw_ssh_data[13])
-        print("[+] 14:: " + raw_ssh_data[14])
-        print("[+] 15:: " + raw_ssh_data[15])
-        print("[+] 16:: " + raw_ssh_data[16])
-
-        exit(0)
-
-        # print("[+] uptime dump:: " + raw_ssh_data[17])
-        # print("[+] uptime len:: " + str(len(raw_ssh_data[17])))
-        # print("[+] uptime content:: " + raw_ssh_data[17])
         self.parse_uptime(raw_ssh_data[17])
 
         self.parse_uname(raw_ssh_data[18])
