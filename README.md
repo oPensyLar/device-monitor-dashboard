@@ -1,9 +1,10 @@
 # device-monitor-dashboard
 
-Python script to generate html report of devices. A cheap/fun reporting solution.
+Python script to generate html report of devices, WITHOUT SOCKET AGENT!
 This can be used for for servers, networking equipment, IOT devices, anything that's "pingable".
 Supports:
 
+ * OS version buid, install date, uptime report
  * WMI + SSH password encryption
  * OS fingerprint recon (Windows or Linux distro)
  * Mail notifications (SMTP relay)
@@ -20,7 +21,8 @@ Supports:
 
 ## Changelog
 ---
- - (2/25/2020) Added SSH + WMI password encryption
+ - (3/05/2020) OS version buid, uptime report
+ - (2/25/2020) Added SSH + WMI password "encryption"
  - (2/22/2020) Added SMTP relay
  - (2/21/2020) Added WMI queries
  - (5/16/2020) Update to python 3
@@ -29,7 +31,6 @@ Supports:
  - (1/27/2018) Added python 3 compatibility
  - (10/27/2017) Updated UI, noty.js
  - (9/25/2017) Add support for custom names
- - (6/3/2017) Now providing a docker image instead of building your own
  - (5/27/2017) - Please see https://github.com/shaggyloris/Device-Monitor-Dashboard for extended functionality.
    - Integrated SQLite DB, all controlled via web UI, API functionality to return JSON.
  - (5/6/17) Added validation of OS for script to run

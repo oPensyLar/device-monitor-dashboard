@@ -17,6 +17,9 @@ class Parser:
 
     mem = None
     err_code = None
+    uname = None
+    uptime = None
+    uname = None
     procs = []
     hds = []
 
@@ -30,8 +33,23 @@ class Parser:
     def get_error(self):
         return self.err_code
 
+    def get_uname(self):
+        return self.uname
+
+    def get_uptime(self):
+        return self.uptime
+
     def get_cpu(self):
         return self.procs
+
+    def parse_uname(self, raw_uname):
+        raw_uname = raw_uname.replace("\n", "")
+        self.uname = raw_uname
+
+    def parse_uptime(self, raw_uptime):
+        raw_uptime = raw_uptime.replace("\n", "")
+        self.uptime = raw_uptime
+
 
     def parse_df(self, raw_df):
         break_lines = raw_df.split("\n")
@@ -139,16 +157,14 @@ class Parser:
         output = output["stdout"]
         raw_ssh_data = output.split("--C0RT4--")
 
-        ps_cpu = raw_ssh_data[0]
-        self.parse_procs(ps_cpu)
+        self.parse_procs(raw_ssh_data[0])
 
-        # self.parse_procs(ps_mem, 0x4)
+        self.parse_uptime(raw_ssh_data[17])
 
-        # free = raw_ssh_data[3]
-        self.parse_mem(raw_ssh_data[10])
+        self.parse_uname(raw_ssh_data[18])
 
-        netstat = raw_ssh_data[4]
-        self.parse_connections(netstat)
+        self.parse_mem(raw_ssh_data[14])
 
-        df = raw_ssh_data[12]
-        self.parse_df(df)
+        self.parse_connections(raw_ssh_data[4])
+
+        self.parse_df(raw_ssh_data[16])

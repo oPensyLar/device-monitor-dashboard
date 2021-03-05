@@ -12,24 +12,27 @@
 </head>
 
 <body>
-    <script type="text/javascript" src="js/circleColor.js"></script>
-    <script type="text/javascript" src="js/circleSize.js"></script>
-    <script type="text/javascript" src="js/notifications.js"></script>
-    <script>
-        new Noty({
-            text: "Report created " + "01/22/2021 17:20:14",
-            type: 'notification',
-            theme: 'mint',
-            closeWith: ['click'],
-            progressBar: true,
-            timeout: 10000,
-            animation: {
-                open: 'animated bounceInRight',
-                close: 'animated bounceOutRight',
-                easing: 'swing',
-            }
-        }).show();
-    </script>
+
+
+
+
+    <div class="table-title">
+        <h3>Server info</h3>
+    </div>
+
+
+
+<table>
+  <tr>
+    <td>Uptime</td>
+    <td>{{uptime}}</td>
+</tr>
+
+  <tr>
+    <td>Info</td>
+    <td>{{uname}}</td>
+  </tr>
+</table>
 
     <div class="table-title">
         <h3>Disk (GB)</h3>

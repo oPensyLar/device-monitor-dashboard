@@ -1,17 +1,15 @@
 #!/usr/bin/python
 
-import re
 import datetime
 import json
+import socket
 import subprocess
 from ipaddress import ip_address, ip_network
 from jinja2 import Environment, FileSystemLoader
 import dns.resolver
 import socket_client
-import parser_j
 import html_report
 import compress
-import config
 import ssh_client
 import mailer
 import os
@@ -21,6 +19,7 @@ import util
 
 env = Environment(loader=FileSystemLoader('template'))
 template = env.get_template('template.html.j2')
+
 
 def load_config(file_path):
     with open(file_path, "r") as f:
@@ -156,7 +155,7 @@ def createhtml(output_file_name, host_dict):
 
 
 def main():
-    mail_notification = True
+    mail_notification = False
 
     c_wmi = wmi_class.WmiClass()
     ssh = ssh_client.SshClient()
@@ -178,7 +177,6 @@ def main():
     ssh_payload = utils.b64_decrypt(config.get("ssh").get("payload"))
 
     user = config.get("mail").get("smtp").get("user")
-    pasword = config.get("mail").get("smtp").get("password")
 
     serv = config.get("mail").get("smtp").get("server")
     port = config.get("mail").get("smtp").get("port")
@@ -212,8 +210,21 @@ def main():
 
         if ping_vals["ttl"] is not 0x0:
             html_path = "report-details/details-" + h.get("hostname") + ".html"
-            h.update(status="up")       # Vive
+            h.update(status="up")
+
             dns_nam = dns_resolver(h.get("hostname"))
+
+            if dns_nam is None:
+                try:
+                    dns_nam = socket.gethostbyaddr(h.get("hostname"))
+                    dns_nam = dns_nam[0]
+
+                except socket.herror:
+                    dns_nam = "Unknow"
+
+            else:
+                dns_nam = "Unknow"
+
             os_nam = os_detect(ping_vals["ttl"])
             # print("TTL:: " + str(ping_vals["ttl"]))
 
@@ -230,9 +241,10 @@ def main():
             if os_nam == "Windows":
                 print("[+] Sending WMI query..")
 
-                query = c_wmi.send_query(h.get("hostname"), wmi_user, wmi_pwd, 0x1)
+                c_wmi.send_query(h.get("hostname"), wmi_user, wmi_pwd, 0x1)
                 c_wmi.send_query(h.get("hostname"), wmi_user, wmi_pwd, 0x2)
                 c_wmi.send_query(h.get("hostname"), wmi_user, wmi_pwd, 0x3)
+                c_wmi.send_query(h.get("hostname"), wmi_user, wmi_pwd, 0x4)
 
                 h.update(status_agent="1")
                 html_rpt.build(h.get("hostname"), c_wmi, html_path, False)
@@ -255,7 +267,15 @@ def main():
             h.update(status_web=None)
             h.update(status_agent="0")
             h.update(status="down")     # Dead
-            h.update(dns_name="None")
+
+            try:
+                dns_nam = socket.gethostbyaddr(h.get("hostname"))
+                dns_nam = dns_nam[0]
+
+            except socket.herror:
+                dns_nam = "Unknow"
+
+            h.update(dns_name=dns_nam)
             h.update(os="Unknow")
 
     createhtml(output_file_name, hosts)

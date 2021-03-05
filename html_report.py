@@ -13,18 +13,18 @@ class HtmlReport:
     def __init__(self):
         pass
 
-    def build(self, hst, wmi_object, file_path, linux_inf):
+    def build(self, hst, host_object, file_path, linux_inf):
 
-        if wmi_object.get_error() is not 0x0:
+        if host_object.get_error() is not 0x0:
             return
 
         procs_info = []
         cpu_usg = []
         disk_info = []
 
-        print("[+] Found " + str(len(wmi_object.get_cpu())) + " process")
+        print("[+] Found " + str(len(host_object.get_cpu())) + " process")
 
-        for cpu in wmi_object.get_cpu():
+        for cpu in host_object.get_cpu():
             if cpu.Name == "_Total" or cpu.Name == "System" or cpu.Name == "Idle" or int(cpu.PercentProcessorTime) == 0x0:
                 continue
 
@@ -42,9 +42,11 @@ class HtmlReport:
         procs_info = sorted(procs_info, key=lambda i: (i['cpu']))
         procs_info = procs_info[len(procs_info)-3:]
 
-        for dsk in wmi_object.get_har_disks():
+        for dsk in host_object.get_har_disks():
             if dsk.FreeSpace is not None:
-                if linux_inf is 0x0:
+
+                # WMI Windows FreeSpace
+                if linux_inf is False:
                     f = str(int(int(dsk.FreeSpace) / 1000000000)) + " GB"
 
                 else:
@@ -54,8 +56,9 @@ class HtmlReport:
                 f = dsk.FreeSpace
 
             if dsk.Size is not None:
-                if linux_inf is 0x0:
+                if linux_inf is False:
                     t = str(int(int(dsk.Size) / 1000000000)) + " GB"
+
 
                 else:
                     t = dsk.Size
@@ -67,7 +70,7 @@ class HtmlReport:
                               "freespace": f,
                               "totalspace": t})
 
-        t = wmi_object.get_memory()
+        t = host_object.get_memory()
 
         if linux_inf is 0x0:
             f = t["f"] + " GB"
@@ -83,6 +86,8 @@ class HtmlReport:
                     "total_phys": t}
 
         self.template.stream(ip_addr=hst,
+                             uptime=host_object.get_uptime(),
+                             uname=host_object.get_uname(),
                              procs_dict=procs_info,
                              cpu_usage=cpu_usg,
                              mem_dict=mem_info,

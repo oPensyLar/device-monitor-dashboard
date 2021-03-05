@@ -6,13 +6,13 @@
 	"password" : "cHhndHNqbW50",
 	"port" : 22,
 
-	"payload" : "cHMgdWF4IC0tc29ydCAtY3B1OyBlY2hvIC0tQzBSVDQtLTsgcHMgdWF4IC0tc29ydCAtcnNzOyBlY2hvIC0tQzBSVDQtLTsgZnJlZSAtaDsgZWNobyAtLUMwUlQ0LS07IG5ldHN0YXQgLXB1bnRhOyBlY2hvIC0tQzBSVDQtLTsgZGYgLWg="
+	"payload" : "cHMgdWF4IC0tc29ydCAtY3B1OyBlY2hvIC0tQzBSVDQtLTsgcHMgdWF4IC0tc29ydCAtcnNzOyBlY2hvIC0tQzBSVDQtLTsgZnJlZSAtaDsgZWNobyAtLUMwUlQ0LS07IG5ldHN0YXQgLXB1bnRhOyBlY2hvIC0tQzBSVDQtLTsgZGYgLWg7IGVjaG8gLS1DMFJUNC0tOyB1cHRpbWU7IGVjaG8gLS1DMFJUNC0tOyB1bmFtZSAtYQ=="
 
 },
 
 "wmi" : {
-	"user" : "b3BlbnN5bGFyMTAtdm0teDg2Cg==",
-	"password" : "cHhndHNqbW50Cg=="
+	"user" : "b3BlbnN5bGFyMTAtdm0teDg2",
+	"password" : "cHhndHNqbW50"
 },
 
 

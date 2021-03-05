@@ -1,5 +1,5 @@
 import wmi
-
+import datetime
 
 class WmiClass:
 
@@ -7,6 +7,8 @@ class WmiClass:
     total_mem = None
     free_mem = []
     cpu_obj = None
+    uname = None
+    os_info_obj = None
 
     def get_error(self):
         return 0x0
@@ -14,8 +16,35 @@ class WmiClass:
     def get_cpu(self):
         return self.cpu_obj
 
+    def get_uptime(self):
+        wmi_os_info = None
+        for a in self.os_info_obj:
+            wmi_os_info = a
+
+        str_fech_last_boot = wmi_os_info.LastBootUpTime
+        dt = datetime.datetime.strptime(str_fech_last_boot[:-4], '%Y%m%d%H%M%S.%f')
+        # dt -= datetime.timedelta(minutes=int(str_fech_last_boot[-4:]))
+        ret = dt.strftime("%A, %B %d, %Y @ %X UTC")
+        return ret
+
+    def get_uname(self):
+        wmi_os_info = None
+        for a in self.os_info_obj:
+            wmi_os_info = a
+
+        install_date = wmi_os_info.InstallDate
+        dt = datetime.datetime.strptime(install_date[:-4], '%Y%m%d%H%M%S.%f')
+        install_date = dt.strftime("%A, %B %d, %Y @ %X UTC")
+
+        ret = wmi_os_info.Manufacturer + " " + wmi_os_info.Caption + \
+              " Build " + wmi_os_info.Version + \
+              " Architecture " + wmi_os_info.OSArchitecture + \
+              " Total Process " + str(wmi_os_info.NumberOfProcesses) + \
+              " Install Date " + install_date
+
+        return ret
+
     def get_har_disks(self):
-        print("[+] Found " + str(len(self.hds)) + " partitions")
         return self.hds
 
     def get_memory(self):
@@ -46,6 +75,10 @@ class WmiClass:
         self.cpu_obj = conn.Win32_PerfFormattedData_PerfProc_Process()
         return 0x0
 
+    def query_os_info(self, ipaddr, user, password):
+        conn = wmi.WMI(ipaddr, user=user, password=password)
+        self.os_info_obj = conn.Win32_OperatingSystem()
+        return 0x0
 
     def query_memory(self, ipaddr, user, password):
         conn = wmi.WMI(ipaddr, user=user, password=password)
@@ -72,3 +105,6 @@ class WmiClass:
 
         if flag is 0x3:
             self.query_cpu(ip_addr, usr, passwd)
+
+        if flag is 0x4:
+            self.query_os_info(ip_addr, usr, passwd)
