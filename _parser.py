@@ -19,7 +19,6 @@ class Parser:
     err_code = None
     uname = None
     uptime = None
-    uname = None
     procs = []
     hds = []
 
@@ -159,6 +158,8 @@ class Parser:
 
         self.parse_procs(raw_ssh_data[0])
 
+        print("[+] uptime len:: " + len(raw_ssh_data[17]))
+        print("[+] uptime content:: " + raw_ssh_data[17])
         self.parse_uptime(raw_ssh_data[17])
 
         self.parse_uname(raw_ssh_data[18])
