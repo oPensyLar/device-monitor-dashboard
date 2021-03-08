@@ -212,17 +212,13 @@ def main():
             html_path = "report-details/details-" + h.get("hostname") + ".html"
             h.update(status="up")
 
-            dns_nam = dns_resolver(h.get("hostname"))
+            # dns_nam = dns_resolver(h.get("hostname"))
 
-            if dns_nam is None:
-                try:
-                    dns_nam = socket.gethostbyaddr(h.get("hostname"))
-                    dns_nam = dns_nam[0]
+            try:
+                dns_nam = socket.gethostbyaddr(h.get("hostname"))
+                dns_nam = dns_nam[0]
 
-                except socket.herror:
-                    dns_nam = "Unknow"
-
-            else:
+            except socket.herror:
                 dns_nam = "Unknow"
 
             os_nam = os_detect(ping_vals["ttl"])

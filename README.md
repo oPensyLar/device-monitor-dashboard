@@ -45,5 +45,5 @@ Supports:
 
 ## Screenshots
 ---
-![alt text](https://i.imgur.com/dx3XabN.png)
-![alt text](https://i.imgur.com/k49MfS4.png)
+![alt text](https://i.imgur.com/TPZsef6.png)
+![alt text](https://i.imgur.com/PbmueJq.png)
