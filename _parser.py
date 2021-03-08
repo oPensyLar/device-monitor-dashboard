@@ -155,6 +155,7 @@ class Parser:
     def parse_output(self, output):
         output = output["stdout"]
         raw_ssh_data = output.split("--C0RT4--")
+        print("[+] raw_ssh_data LEN " + str(len(raw_ssh_data)))
 
         self.parse_procs(raw_ssh_data[0])
 
