@@ -155,7 +155,7 @@ def createhtml(output_file_name, host_dict):
 
 
 def main():
-    mail_notification = False
+    mail_notification = True
 
     c_wmi = wmi_class.WmiClass()
     ssh = ssh_client.SshClient()
@@ -175,6 +175,7 @@ def main():
     ssh_pwd = utils.b64_decrypt(config.get("ssh").get("password"))
     ssh_port = config.get("ssh").get("port")
     ssh_payload = utils.b64_decrypt(config.get("ssh").get("payload"))
+    print("[+] Payload length:: " + str(len(ssh_payload)))
 
     user = config.get("mail").get("smtp").get("user")
 
