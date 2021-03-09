@@ -126,6 +126,10 @@ class Parser:
         return 0x0
 
     def parse_mem(self, raw_mem):
+        with open("debug_log\\mem_parse.log", "w") as fp:
+            fp.write(raw_mem)
+            fp.close()
+
         break_lines = raw_mem.split("\n")
 
         mem_line = break_lines[2]
