@@ -126,27 +126,29 @@ class Parser:
         return 0x0
 
     def parse_mem(self, raw_mem):
-        with open("debug_log\\mem_parse.log", "w") as fp:
-            fp.write(raw_mem)
-            fp.close()
-
         break_lines = raw_mem.split("\n")
 
         mem_line = break_lines[2]
         swap_line = break_lines[3]
 
-        iter = re.finditer(r"[{0-9}].[{0-9}][A-Z]", mem_line)
+        iter = re.finditer(r"[{0-9}.[{0-9}][A-Z]", mem_line)
         indices = [m.start(0) for m in iter]
 
-        total = mem_line[indices[0]:]
+        index_cut = 1
+
+        if mem_line[indices[0]-index_cut:indices[0]] is " ":
+            index_cut = 0
+
+        total = mem_line[indices[0]-index_cut:]
+
         cut_final = total.find(" ")
         total = total[:cut_final]
 
-        usage = mem_line[indices[1]:]
+        usage = mem_line[indices[1]-2:]
         cut_final = usage.find(" ")
         usage = usage[:cut_final]
 
-        free = mem_line[indices[2]:]
+        free = mem_line[indices[2]-2:]
         cut_final = free.find(" ")
         free = free[:cut_final]
 

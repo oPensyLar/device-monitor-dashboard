@@ -16,6 +16,7 @@ import os
 import requests
 import wmi_class
 import util
+import _parser
 
 env = Environment(loader=FileSystemLoader('template'))
 template = env.get_template('template.html.j2')
@@ -184,6 +185,12 @@ def main():
 
     para = config.get("mail").get("to")
     subject = config.get("mail").get("subject")
+
+    p = _parser.Parser()
+
+    # with open("C:\\Users\\opensylar\\Desktop\\mem_parse.log", "r") as fp:
+    #    l = fp.read()
+    #    p.parse_mem(l)
 
     with open(f_nam, "r") as f:
         for c_addr in f:
