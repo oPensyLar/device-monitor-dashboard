@@ -16,7 +16,7 @@
     <div id="circle"><strong></strong></div>
     <script>
         $('#circle').circleProgress({
-            value: "0.5",
+            value: "0.25",
             size: 350,
             thickness: 6,
             emptyFill: "#262b33",
@@ -37,7 +37,7 @@
 
     <script>
         new Noty({
-            text: "Report created " + "03/09/2021 12:14:19",
+            text: "Report created " + "03/17/2021 19:22:34",
             type: 'notification',
             theme: 'mint',
             closeWith: ['click'],
@@ -59,12 +59,9 @@
         <thead>
             <tr>
                 <th width="10%" class="text-left">DNS</th>
-                <th width="35%" class="text-center">Ping</th>
-                <th width="35%" class="text-center">Agent</th>
+                <th width="35%" class="text-center">Status</th>
                 <th width="10%" class="text-left">IP</th>
-                <th width="10%" class="text-center">SOC Websites</th>
-                <th width="10%" class="text-center">Status</th>
-                <th width="10%" class="text-center">Code</th>
+                <th width="10%" class="text-center">OS</th>
             </tr>
         </thead>
         <tbody class="table-hover">
@@ -79,39 +76,23 @@
                             
                             
 
-                            
-                            <td><div class="led-red"></div></td>
-                            
-                            
-                            
-
                             <td class="text-left">192.168.1.112</td>
                             <td class="text-left">Unknow</td>
-
-                            <td><div class="led-red"></div></td>
-                            <td class="text-center">None</td>
 
                         </tr>
                     
             <tr>
-							<td onClick="window.open('report-details/details-192.168.1.218.html')";class="text-left">rompemuro.lan</td>
+							<td onClick="window.open('None')";class="text-left">rompemuro.lan</td>
 							
 
                             
-							<td><div class="led-green"></div></td>
+							<td><div class="led-red"></div></td>
 							
-                            
-
-                            
-                            <td><div class="led-green"></div></td>
                             
                             
 
                             <td class="text-left">192.168.1.218</td>
-                            <td class="text-left">Linux</td>
-
-                            <td><div class="led-red"></div></td>
-                            <td class="text-center">None</td>
+                            <td class="text-left">Unknow</td>
 
                         </tr>
                     
@@ -124,16 +105,8 @@
 							
                             
 
-                            
-                            <td><div class="led-green"></div></td>
-                            
-                            
-
                             <td class="text-left">192.168.1.3</td>
                             <td class="text-left">Linux</td>
-
-                            <td><div class="led-red"></div></td>
-                            <td class="text-center">200</td>
 
                         </tr>
                     
@@ -147,22 +120,116 @@
                             
                             
 
-                            
-                            <td><div class="led-red"></div></td>
-                            
-                            
-                            
-
                             <td class="text-left">192.168.1.1</td>
                             <td class="text-left">Unknow</td>
-
-                            <td><div class="led-red"></div></td>
-                            <td class="text-center">None</td>
 
                         </tr>
                     
               </tbody>
     </table>
+
+
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+
+    <div class="table-title">
+
+        <h3>SOC Websites</h3>
+    </div>
+
+    <table class="table-fill">
+        <thead>
+            <tr>
+                <th width="10%" class="text-left">SOC Websites</th>
+                <th width="35%" class="text-center">Status</th>
+                <th width="10%" class="text-center">Port 80</th>
+                <th width="10%" class="text-center">Port 443</th>
+            </tr>
+        </thead>
+        <tbody class="table-hover">
+
+            
+
+            <tr>
+                <td onClick="window.open('None')";class="text-left">win10-vm-x86.lan</td>
+                <td><div class="led-green"></div></td>
+
+                
+                    <td>N/A</td>
+                    <td>N/A</td>
+                
+            
+            </tr>            
+
+
+            
+
+            <tr>
+                <td onClick="window.open('None')";class="text-left">rompemuro.lan</td>
+                <td><div class="led-green"></div></td>
+
+                
+                    <td>N/A</td>
+                    <td>N/A</td>
+                
+            
+            </tr>            
+
+
+            
+
+            <tr>
+                <td onClick="window.open('report-details/details-192.168.1.3.html')";class="text-left">dlink.lan</td>
+                <td><div class="led-green"></div></td>
+
+                
+
+                        
+
+                            
+                                <td>200</td>
+                            
+
+                                                        
+
+                        
+
+                            
+
+                            
+                                <td>N/A</td>
+                                                        
+
+                                    
+                    
+                    
+            
+            </tr>            
+
+
+            
+
+            <tr>
+                <td onClick="window.open('None')";class="text-left">Unknow</td>
+                <td><div class="led-green"></div></td>
+
+                
+                    <td>N/A</td>
+                    <td>N/A</td>
+                
+            
+            </tr>            
+
+
+            
+
+        </tbody>
+    </table>
+
+
+
 </body>
 
 </html>

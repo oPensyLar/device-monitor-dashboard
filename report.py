@@ -50,14 +50,28 @@ def send_mail(mail_data, user_data, server_data):
     m.conn()
 
 
-def check_web(hst):
-    try:
-        resp = requests.get("http://" + hst)
+def check_web(hst, ports):
 
-    except requests.exceptions.ConnectionError:
-        return None
+    ret_data = []
 
-    return resp.status_code
+    for port in ports:
+
+        if port is 443:
+            protocol = "https"
+
+        else:
+            protocol = "http"
+
+        try:
+            resp = requests.get(protocol + "://" + hst + ":" + str(port))
+
+        except requests.exceptions.ConnectionError:
+            resp.status_code = "N/A"
+
+        dat_obj = {"host": hst, "port": port, "code": resp.status_code}
+        ret_data.append(dat_obj)
+
+    return ret_data
 
 
 def is_ip_range(c_addr):
@@ -156,7 +170,7 @@ def createhtml(output_file_name, host_dict):
 
 
 def main():
-    mail_notification = True
+    mail_notification = False
 
     c_wmi = wmi_class.WmiClass()
     ssh = ssh_client.SshClient()
@@ -232,7 +246,8 @@ def main():
             os_nam = os_detect(ping_vals["ttl"])
             # print("TTL:: " + str(ping_vals["ttl"]))
 
-            status_web = check_web(h.get("hostname"))
+            ports = [80, 443]
+            status_web = check_web(h.get("hostname"), ports)
             h.update(status_web=status_web)
             h.update(dns_name=dns_nam)
             h.update(os=os_nam)

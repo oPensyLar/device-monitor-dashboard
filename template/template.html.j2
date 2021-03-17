@@ -59,12 +59,9 @@
         <thead>
             <tr>
                 <th width="10%" class="text-left">DNS</th>
-                <th width="35%" class="text-center">Ping</th>
-                <th width="35%" class="text-center">Agent</th>
+                <th width="35%" class="text-center">Status</th>
                 <th width="10%" class="text-left">IP</th>
-                <th width="10%" class="text-center">SOC Websites</th>
-                <th width="10%" class="text-center">Status</th>
-                <th width="10%" class="text-center">Code</th>
+                <th width="10%" class="text-center">OS</th>
             </tr>
         </thead>
         <tbody class="table-hover">
@@ -82,25 +79,71 @@
                             
                             {% endif %}
 
-                            {% if h.get("status_agent") == "1" %}
-                            <td><div class="led-green"></div></td>
-                            
-                            {% elif h.get("status_agent") == "0" %}
-                            <td><div class="led-red"></div></td>
-                            
-                            
-                            {% endif %}
-
                             <td class="text-left">{{ h.get("ip_addr") }}</td>
                             <td class="text-left">{{ h.get("os") }}</td>
-
-                            <td><div class="led-red"></div></td>
-                            <td class="text-center">{{ h.get("status_web") }}</td>
 
                         </tr>
                     {% endfor %}
               </tbody>
     </table>
+
+
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+
+    <div class="table-title">
+
+        <h3>SOC Websites</h3>
+    </div>
+
+    <table class="table-fill">
+        <thead>
+            <tr>
+                <th width="10%" class="text-left">SOC Websites</th>
+                <th width="35%" class="text-center">Status</th>
+                <th width="10%" class="text-center">Port 80</th>
+                <th width="10%" class="text-center">Port 443</th>
+            </tr>
+        </thead>
+        <tbody class="table-hover">
+
+            {% for h in host_dict %}
+
+            <tr>
+                <td onClick="window.open('{{h.get("html_path")}}')";class="text-left">{{ h.get("dns_name") }}{% if h.get("port") %}:{{ h.get("port") }}{% endif %}</td>
+                <td><div class="led-green"></div></td>
+
+                {% if h.get("status_web") %}
+
+                        {% for h_sb in h.get("status_web") %}
+
+                            {% if h_sb.get("port") == 80 %}
+                                <td>{{ h_sb.get("code") }}</td>
+                            {% endif %}
+
+                            {% if h_sb.get("port") == 443 %}
+                                <td>{{ h_sb.get("code") }}</td>
+                            {% endif %}                            
+
+                        {% endfor %}            
+                    
+                    {% else %}
+                    <td>N/A</td>
+                    <td>N/A</td>
+                {% endif %}
+            
+            </tr>            
+
+
+            {% endfor %}
+
+        </tbody>
+    </table>
+
+
+
 </body>
 
 </html>
