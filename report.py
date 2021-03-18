@@ -17,10 +17,19 @@ import requests
 import wmi_class
 import util
 import _parser
+import re
 
 env = Environment(loader=FileSystemLoader('template'))
 template = env.get_template('template.html.j2')
 
+def domain_checker(domain):
+    pattern = re.compile('(//|\s+|^)(\w\.|\w[A-Za-z0-9-]{0,61}\w\.){1,3}[A-Za-z]{2,6}')
+    ret = pattern.match(domain)
+    return ret
+
+def ip_checker(ip_addr):
+    pattern = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
+    return pattern.match(ip_addr)
 
 def load_config(file_path):
     with open(file_path, "r") as f:
@@ -64,11 +73,12 @@ def check_web(hst, ports):
 
         try:
             resp = requests.get(protocol + "://" + hst + ":" + str(port))
+            http_code = resp.status_code
 
         except requests.exceptions.ConnectionError:
-            resp.status_code = "N/A"
+            http_code = "N/A"
 
-        dat_obj = {"host": hst, "port": port, "code": resp.status_code}
+        dat_obj = {"host": hst, "port": port, "code": http_code}
         ret_data.append(dat_obj)
 
     return ret_data
@@ -293,6 +303,10 @@ def main():
 
             except socket.herror:
                 dns_nam = "Unknow"
+
+            except socket.gaierror:
+                print("[!] " + h.get("hostname") + " is bad host")
+                exit(-1)
 
             h.update(dns_name=dns_nam)
             h.update(os="Unknow")
