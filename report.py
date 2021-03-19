@@ -109,11 +109,13 @@ def dns_resolver(ip_addr):
 
 
 def os_detect(ttl_val):
-    if ttl_val is 64:
+    if ttl_val is 64 or ttl_val is 60:
         return "Linux"
 
     if ttl_val == 128 or ttl_val == 124:
         return "Windows"
+
+    return "N/A"
 
 
 def parse_output_ping(output_string):
