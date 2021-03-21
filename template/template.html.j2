@@ -109,34 +109,16 @@
         </thead>
         <tbody class="table-hover">
 
-            {% for h in host_dict %}
+            {% for h in web_host_dict %}                
 
-            <tr>
-                <td onClick="window.open('{{h.get("html_path")}}')";class="text-left">{{ h.get("dns_name") }}{% if h.get("port") %}:{{ h.get("port") }}{% endif %}</td>
-                <td><div class="led-green"></div></td>
+                        <tr>
 
-                {% if h.get("status_web") %}
+                            <td>{{ h[0].get("host") }}</td>
+                            <td><div class="led-green"></div></td>
+                            <td>{{ h[0].get("code") }}</td>
+                            <td>{{ h[1].get("code") }}</td>
 
-                        {% for h_sb in h.get("status_web") %}
-
-                            {% if h_sb.get("port") == 80 %}
-                                <td>{{ h_sb.get("code") }}</td>
-                            {% endif %}
-
-                            {% if h_sb.get("port") == 443 %}
-                                <td>{{ h_sb.get("code") }}</td>
-                            {% endif %}                            
-
-                        {% endfor %}            
-                    
-                    {% else %}
-                    <td>N/A</td>
-                    <td>N/A</td>
-                {% endif %}
-            
-            </tr>            
-
-
+                        </tr>
             {% endfor %}
 
         </tbody>

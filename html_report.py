@@ -22,7 +22,7 @@ class HtmlReport:
         cpu_usg = []
         disk_info = []
 
-        print("[+] Found " + str(len(host_object.get_cpu())) + " process")
+        # print("[+] Found " + str(len(host_object.get_cpu())) + " process")
 
         for cpu in host_object.get_cpu():
             if cpu.Name == "_Total" or cpu.Name == "System" or cpu.Name == "Idle" or int(cpu.PercentProcessorTime) == 0x0:

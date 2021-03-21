@@ -161,16 +161,11 @@ class Parser:
     def parse_output(self, output):
         output = output["stdout"]
         raw_ssh_data = output.split("--C0RT4--")
-        print("[+] raw_ssh_data LEN " + str(len(raw_ssh_data)))
+        # print("[+] raw_ssh_data LEN " + str(len(raw_ssh_data)))
 
         self.parse_procs(raw_ssh_data[0])
-
         self.parse_uptime(raw_ssh_data[17])
-
         self.parse_uname(raw_ssh_data[18])
-
         self.parse_mem(raw_ssh_data[14])
-
         self.parse_connections(raw_ssh_data[4])
-
         self.parse_df(raw_ssh_data[16])

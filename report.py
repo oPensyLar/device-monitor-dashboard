@@ -27,9 +27,11 @@ def domain_checker(domain):
     ret = pattern.match(domain)
     return ret
 
+
 def ip_checker(ip_addr):
     pattern = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
     return pattern.match(ip_addr)
+
 
 def load_config(file_path):
     with open(file_path, "r") as f:
@@ -156,7 +158,7 @@ def parsehost(hostfile):
 
 
 # host_dict Ya esta creado, mete las variables en el HTML
-def createhtml(output_file_name, host_dict):
+def createhtml(output_file_name, host_dict, wserver_dict):
     refresh_rate = "60"
     today = (datetime.datetime.now())
     now = today.strftime("%m/%d/%Y %H:%M:%S")
@@ -178,6 +180,7 @@ def createhtml(output_file_name, host_dict):
                     servers_down=servers_down,
                     servers_percent=servers_percent,
                     server_total=server_total,
+                    web_host_dict=wserver_dict,
                     host_dict=host_dict).dump('index.html')
 
 
@@ -188,9 +191,11 @@ def main():
     ssh = ssh_client.SshClient()
     utils = util.Util()
 
+    webservers_file_path = "webserver.txt"
     f_nam = "srv.txt"
     output_file_name = "index.html"
     hosts = []
+    webserver_hosts = []
 
     config = load_config("config.json")
 
@@ -217,6 +222,16 @@ def main():
     # with open("C:\\Users\\opensylar\\Desktop\\mem_parse.log", "r") as fp:
     #    l = fp.read()
     #    p.parse_mem(l)
+
+    with open(webservers_file_path, "r") as f:
+        ports = [80, 443]
+
+        for c_addr in f:
+            c_addr = c_addr.replace("\n", "")
+            c_addr = c_addr.replace("\r", "")
+            print("[+] Sending web tests to " + c_addr)
+            status_web = check_web(c_addr, ports)
+            webserver_hosts.append(status_web)
 
     with open(f_nam, "r") as f:
         for c_addr in f:
@@ -258,9 +273,6 @@ def main():
             os_nam = os_detect(ping_vals["ttl"])
             # print("TTL:: " + str(ping_vals["ttl"]))
 
-            ports = [80, 443]
-            status_web = check_web(h.get("hostname"), ports)
-            h.update(status_web=status_web)
             h.update(dns_name=dns_nam)
             h.update(os=os_nam)
             h.update(html_path=html_path)
@@ -295,7 +307,6 @@ def main():
         # Offline
         else:
             print("[!] " + h.get("hostname") + " offline")
-            h.update(status_web=None)
             h.update(status_agent="0")
             h.update(status="down")     # Dead
 
@@ -313,7 +324,7 @@ def main():
             h.update(dns_name=dns_nam)
             h.update(os="Unknow")
 
-    createhtml(output_file_name, hosts)
+    createhtml(output_file_name, hosts, webserver_hosts)
 
     c_path = os.getcwd()
     file_output = c_path + "\\reports.zip"
