@@ -67,18 +67,22 @@ def check_web(hst, ports):
 
     for port in ports:
 
-        if port is 443:
+        if port == 443:
             protocol = "https"
 
         else:
             protocol = "http"
 
         try:
-            resp = requests.get(protocol + "://" + hst + ":" + str(port))
+            url = protocol + "://" + hst + ":" + str(port)
+            resp = requests.get(url, verify=False)
             http_code = resp.status_code
 
         except requests.exceptions.ConnectionError:
-            http_code = "N/A"
+            if resp is None:
+                http_code = "N/A"
+            else:
+                http_code = resp.status_code
 
         dat_obj = {"host": hst, "port": port, "code": http_code}
         ret_data.append(dat_obj)
