@@ -64,7 +64,7 @@ def send_mail(mail_data, user_data, server_data):
 def check_web(hst, ports):
 
     ret_data = []
-
+    resp = None
     for port in ports:
 
         if port == 443:
@@ -82,7 +82,11 @@ def check_web(hst, ports):
             if resp is None:
                 http_code = "N/A"
             else:
-                http_code = resp.status_code
+                if port == 80:
+                    http_code = "N/A"
+
+                else:
+                    http_code = resp.status_code
 
         dat_obj = {"host": hst, "port": port, "code": http_code}
         ret_data.append(dat_obj)
