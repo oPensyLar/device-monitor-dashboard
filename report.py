@@ -39,12 +39,12 @@ def load_config(file_path):
         return cfg
 
 
-def build_zip(c_path, file_path_output):
+def build_zip(c_path, file_path_output, index_html):
     c = compress.Compress()
     css_folder = c_path + "\\css"
     js_folder = c_path + "\\js"
     report_folder = c_path + "\\report-details"
-    arrays_files = [report_folder, css_folder, js_folder, "index.html"]
+    arrays_files = [report_folder, css_folder, js_folder, index_html]
     c.build(c_path, arrays_files, file_path_output)
 
 
@@ -189,7 +189,7 @@ def createhtml(output_file_name, host_dict, wserver_dict):
                     servers_percent=servers_percent,
                     server_total=server_total,
                     web_host_dict=wserver_dict,
-                    host_dict=host_dict).dump('index.html')
+                    host_dict=host_dict).dump(output_file_name)
 
 
 def main():
@@ -201,7 +201,7 @@ def main():
 
     webservers_file_path = "webserver.txt"
     f_nam = "srv.txt"
-    output_file_name = "index.html"
+    output_file_name = "SOC-HC-Reports" + datetime.datetime.now().strftime('%m%d%Y') + ".html"
     hosts = []
     webserver_hosts = []
 
@@ -336,7 +336,7 @@ def main():
 
     c_path = os.getcwd()
     file_output = c_path + "\\reports.zip"
-    build_zip(c_path, file_output)
+    build_zip(c_path, file_output, output_file_name)
 
     if mail_notification is True:
         print("[+] Sending mail to SMTP relay server")
