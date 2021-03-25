@@ -32,7 +32,7 @@ For generate base64 code you need base64 tool & change this config.json
 
 On config.json line 6 edit you password
 
-![Change Base64 on config.json](/img/password-config-json "Change Base64 on config.json").
+![Change Base64 on config.json](/img/password-config-json.png "Change Base64 on config.json").
 
 
 ### Whats this?
@@ -57,6 +57,9 @@ Supports:
 
 ## Screenshots
 ---
+
+HTML general
 ![Screenshot index](https://i.imgur.com/TPZsef6.png)
 
+HTML by host
 ![Screenshot details](https://i.imgur.com/PbmueJq.png)
