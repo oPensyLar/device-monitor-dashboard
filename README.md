@@ -3,9 +3,6 @@
 Welcome to the device-monitor-dashboard! Feel free to edit and contribute!
 
 
-# Notes
-
-
 This works SSH or WMI uniques credentials for all hosts (Active Directory enviroments)
 
 
