@@ -1,6 +1,6 @@
 # device-monitor-dashboard
 
-Welcome to the device-monitor-dashboard! Feel free to edit and contribute!
+Python script to generate html report of devices, WITHOUT SOCKET AGENT! This can be used for for servers, networking equipment, IoT devices, anything that's "pingable".
 
 
 This works SSH or WMI uniques credentials for all hosts (Active Directory enviroments)
@@ -30,16 +30,28 @@ For generate base64 code you need base64 tool & change this config.json
 
 ![Generate Base64 string](/img/base64-tool.png "Generate Base64 string").
 
-On config.json line 6 change **cHhndHNqbW50** to **c3VwZXJfcGFzc3dvcmQ=**
+On config.json ** line 6 ** change **cHhndHNqbW50** to **c3VwZXJfcGFzc3dvcmQ=**
 
 ![Change Base64 on config.json](/img/password-config-json.png "Change Base64 on config.json").
 
 
-### Whats this?
 
-Python script to generate html report of devices, WITHOUT SOCKET AGENT!
-This can be used for for servers, networking equipment, IOT devices, anything that's "pingable".
-Supports:
+
+
+### Mail notification support
+
+You can disable/enable on report.py ** line 196 **
+
+
+
+```python
+def main():
+    mail_notification = False
+```
+
+
+
+# Features
 
  * OS version buid, install date, uptime report
  * WMI + SSH password encryption
