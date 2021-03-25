@@ -1,5 +1,42 @@
 # device-monitor-dashboard
 
+Welcome to the device-monitor-dashboard! Feel free to edit and contribute!
+
+
+This works SSH or WMI uniques credentials for all hosts (Active Directory enviroments)
+
+
+# Deploying
+
+### Packages
+
+
+You need...
+
+- Python3 (Anaconda works)
+- paramiko python package (You need install Visual Studio Build tools before)
+- Edit srv.txt (for SSH/WMI monitor)
+- Edit webserver.txt (for web service monitor)
+
+
+
+### Credentials WMI/SSH
+
+Password store under Base64 on config.json
+
+For generate base64 code you need base64 tool & change this config.json
+
+
+
+![Generate Base64 string](/img/base64-tool.png "Generate Base64 string").
+
+On config.json line 6 edit you password
+
+![Change Base64 on config.json](/img/base64-tool.png "Change Base64 on config.json").
+
+
+### Whats this?
+
 Python script to generate html report of devices, WITHOUT SOCKET AGENT!
 This can be used for for servers, networking equipment, IOT devices, anything that's "pingable".
 Supports:
