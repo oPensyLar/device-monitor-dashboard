@@ -8,16 +8,27 @@ This works SSH or WMI uniques credentials for all hosts (Active Directory enviro
 
 # Deploying
 
-### Packages
 
 
-You need...
+### Notes
 
 - Python3 (Anaconda works)
-- paramiko python package (You need install Visual Studio Build tools before)
+- for Windows test need you install Visual Studio Build tools (paramiko package requeriment)
 - Edit srv.txt (for SSH/WMI monitor)
 - Edit webserver.txt (for web service monitor)
 
+After this you already for install Python package dependecies
+
+
+```
+pip -r requeriments.txt
+```
+
+Now ran ...
+
+```
+python report.py
+```
 
 
 ### Credentials WMI/SSH
@@ -49,6 +60,16 @@ def main():
     mail_notification = False
 ```
 
+
+### websever.txt format
+
+
+```
+192.168.1.3
+127.0.0.1
+hostname.domain
+www.google.com
+```
 
 
 # Features
