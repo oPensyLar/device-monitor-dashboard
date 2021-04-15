@@ -55,37 +55,44 @@
         <h3></h3>
     </div>
 
-    <table class="table-fill">
-        <thead>
+
+<table class="table" data-filtering="true">
+  <thead>
             <tr>
                 <th width="10%" class="text-left">DNS</th>
                 <th width="35%" class="text-center">Status</th>
                 <th width="10%" class="text-left">IP</th>
                 <th width="10%" class="text-center">OS</th>
             </tr>
-        </thead>
-        <tbody class="table-hover">
-					{% for h in host_dict %}
-            <tr>
-							<td onClick="window.open('{{h.get("html_path")}}')";class="text-left">{{ h.get("dns_name") }}{% if h.get("port") %}:{{ h.get("port") }}{% endif %}</td>
-							
+
+  </thead>
+  <tbody>
+
+
+    {% for h in host_dict %}
+
+      <tr>
+
+        <td onClick="window.open('{{h.get("html_path")}}')";class="text-left">{{ h.get("dns_name") }}</td>
+                                    
 
                             {% if h.get("status") == "up" %}
-							<td><div class="led-green"></div></td>
-							
+                            <td><div class="led-green"></div></td>
+                            
                             {% elif h.get("status") == "down" %}
-							<td><div class="led-red"></div></td>
-							
+                            <td><div class="led-red"></div></td>
+                            
                             
                             {% endif %}
 
                             <td class="text-left">{{ h.get("ip_addr") }}</td>
                             <td class="text-left">{{ h.get("os") }}</td>
+      </tr>
 
-                        </tr>
-                    {% endfor %}
-              </tbody>
-    </table>
+    {% endfor %}
+
+  </tbody>
+</table>
 
 
     <br/>
@@ -98,16 +105,16 @@
         <h3>SOC Websites</h3>
     </div>
 
-    <table class="table-fill">
-        <thead>
-            <tr>
+<table class="table" data-filtering="true">
+  <thead>
+  <tr>
                 <th width="10%" class="text-left">SOC Websites</th>
                 <th width="35%" class="text-center">Status</th>
                 <th width="10%" class="text-center">Port 80</th>
                 <th width="10%" class="text-center">Port 443</th>
-            </tr>
-        </thead>
-        <tbody class="table-hover">
+  </tr>
+  </thead>
+  <tbody>
 
             {% for h in web_host_dict %}                
 
@@ -119,11 +126,12 @@
                             <td>{{ h[1].get("code") }}</td>
 
                         </tr>
+
+
             {% endfor %}
-
-        </tbody>
-    </table>
-
+  
+  </tbody>
+</table>
 
 
 </body>

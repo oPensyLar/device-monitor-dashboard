@@ -201,7 +201,7 @@ def main():
 
     webservers_file_path = "webserver.txt"
     f_nam = "srv.txt"
-    output_file_name = "SOC-HC-Reports" + datetime.datetime.now().strftime('%m%d%Y') + ".html"
+    output_file_name = "another-name.html"
     hosts = []
     webserver_hosts = []
 
